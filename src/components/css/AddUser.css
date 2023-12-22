@@ -1,0 +1,58 @@
+.container {
+  width: 40%;
+  background-color: white;
+  border-radius: 10px;
+  position: absolute;
+  left: 30%;
+  top: 20%;
+  z-index: 1000;
+  padding: 10px;
+  animation: fade ease-in-out 0.5s;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 100;
+  }
+}
+
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.input-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  margin: 5px;
+  gap: 10px;
+  font-size: 15px;
+}
+
+.input-container input {
+  height: 30px;
+  width: 70%;
+  border: 2px solid black;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.form-container button {
+  padding: 10px;
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+.form-container button:hover {
+  background-color: rgb(48, 43, 43);
+}

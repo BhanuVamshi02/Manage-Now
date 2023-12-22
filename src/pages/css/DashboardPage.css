@@ -1,0 +1,160 @@
+.main-container {
+  background-color: rgb(0, 0, 0);
+  /* height: 100%; */
+  width: 100%;
+}
+.main-container .view-button {
+  margin: 40px 0 0 40px;
+  font-weight: bold;
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+}
+.main-container .view-button:hover {
+  background-color: rgb(182, 177, 177);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  padding: 20px 20px;
+  align-items: center;
+  background-color: white;
+  @media (max-width: 376px) {
+    padding: 20px 10px;
+  }
+}
+
+.nav-container .nav-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.nav-container .nav-logo img {
+  width: 100px;
+  @media (max-width: 365px) {
+    width: 60px;
+  }
+}
+
+.nav-container button {
+  font-style: inherit;
+  font-weight: bold;
+  width: fit-content;
+  padding: 15px;
+  background-color: black;
+  color: white;
+  margin: 0 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  @media (max-width: 420px) {
+    margin: 0 10px;
+  }
+  @media (max-width: 365px) {
+    padding: 10px;
+    margin: 0 5px;
+  }
+}
+
+.nav-container button a {
+  text-decoration: none;
+  color: inherit;
+}
+.main-container table {
+  width: 80%;
+  margin: 40px auto;
+  color: white;
+  padding-bottom: 50px;
+  @media (max-width: 520px) {
+    margin: 40px 0;
+    width: 100%;
+    font-size: 12px;
+  }
+  @media (max-width: 380px) {
+    font-size: 10px;
+  }
+}
+
+th {
+  border-bottom: 2px solid grey;
+}
+
+.row td {
+  width: auto;
+  text-align: center;
+  border-bottom: 2px solid grey;
+}
+
+.row td img {
+  cursor: pointer;
+  padding: 10px 0;
+}
+
+.card-container {
+  width: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
+.card-container .card-component {
+  background-color: white;
+  padding: 15px 20px;
+  width: 300px;
+  margin: 25px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.card-container .card-component:hover {
+  transform: scale(1.05);
+  transition: ease-in-out;
+  transition-duration: 0.2s;
+  box-shadow: 0 0 50px rgba(255, 255, 255, 0.8);
+}
+
+.card-container .card-component span {
+  font-weight: bold;
+  padding-right: 5px;
+  color: rgb(44, 40, 40);
+}
+.card-component .label-container {
+  margin-bottom: 5px;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-container .card-component .card-handlers {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.card-container .card-component .card-handlers button {
+  background-color: black;
+  color: white;
+  padding: 8px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+}
+.card-container .card-component .card-handlers button,
+.nav-container button:hover {
+  background-color: rgb(35, 34, 34);
+}
+
+@media (max-width: 625px) {
+  .nav-logo h1 {
+    display: none;
+  }
+}
