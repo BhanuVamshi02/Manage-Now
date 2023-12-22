@@ -13,8 +13,15 @@
   background-color: black;
   color: white;
 }
+.login-container form {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
 
-.login-container input {
+.login-container form input {
   margin: 10px;
   padding: 10px;
   border-radius: 5px;
@@ -40,12 +47,14 @@
   }
 }
 
-.login-container a {
-  text-decoration: none;
+.login-container button {
+  font-size: 1.1rem;
+  border: none;
   color: black;
   background-color: white;
   padding: 10px;
   border-radius: 5px;
+  font-weight: 500;
 }
 
 .login-container p {

@@ -1,22 +1,41 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import SigninPage from "../src/pages/SigninPage";
 import DashboardPage from "../src/pages/DashboardPage";
 import Home from "../src/pages/Home";
+import { AuthContext } from "./Context/AuthContext";
+import { Protected } from "./Protected";
 
 const App = () => {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Home></Home>,
+    },
+    {
+      path: "/login",
+      element: <LoginPage></LoginPage>,
+    },
+    {
+      path: "/signin",
+      element: <SigninPage></SigninPage>,
+    },
+    {
+      path: "/dashboard",
+      element: (
+        <Protected>
+          <DashboardPage />
+        </Protected>
+      ),
+    },
+  ]);
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signin" element={<SigninPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="*" element={<h1>404 Not Found</h1>} />
-      </Routes>
-    </BrowserRouter>
+    <AuthContext>
+      <RouterProvider router={router}></RouterProvider>
+    </AuthContext>
   );
 };
 

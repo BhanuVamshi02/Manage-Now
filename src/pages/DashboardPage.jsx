@@ -1,7 +1,9 @@
 import React, { useLayoutEffect, useEffect, useState } from "react";
 import "./css/DashboardPage.css";
 import AddUser from "../components/AddUser";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
+import { Context } from "../Context/AuthContext";
 
 const DashboardPage = () => {
   const [addUsers, setAddUsers] = useState(false);
@@ -14,7 +16,8 @@ const DashboardPage = () => {
   });
 
   const [toggleview, setToggleView] = useState(false);
-
+  const auth = getAuth();
+  const navigate = useNavigate();
   const addUserDetails = () => {
     setAddUsers(!addUsers);
   };
@@ -30,6 +33,15 @@ const DashboardPage = () => {
     const updatedItems = Allitems.filter((item) => item.id !== id);
     localStorage.setItem("userStore", JSON.stringify(updatedItems));
     setGetDetails(updatedItems);
+  }
+
+  async function handleLogout() {
+    try {
+      await signOut(auth);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // console.log(Allitems);
@@ -52,7 +64,6 @@ const DashboardPage = () => {
   //   console.log("getDetails: ", getDetails);
   // }, []);
 
-  useEffect(() => {}, []);
   return (
     <div className="main-container">
       <div className="nav-container">
@@ -64,9 +75,7 @@ const DashboardPage = () => {
           <button onClick={addUserDetails}>
             {addUsers ? "CANCEL USER" : "ADD USER"}
           </button>
-          <button>
-            <Link to="/login">LOGOUT</Link>
-          </button>
+          <button onClick={handleLogout}>LOGOUT </button>
         </div>
       </div>
 
