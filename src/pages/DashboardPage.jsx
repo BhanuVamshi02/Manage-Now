@@ -1,68 +1,89 @@
-import React, { useLayoutEffect, useEffect, useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./css/DashboardPage.css";
 import AddUser from "../components/AddUser";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import { Context } from "../Context/AuthContext";
+import {
+  collection,
+  getDocs,
+  doc,
+  deleteDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { db } from "../index";
 
 const DashboardPage = () => {
   const [addUsers, setAddUsers] = useState(false);
-  const [getDetails, setGetDetails] = useState(
-    JSON.parse(localStorage.getItem("userStore"))
-  );
+  const [getDetails, setGetDetails] = useState([]);
   const [updateDetails, setUpdateDetails] = useState({
     isActive: false,
     userId: null,
+    username: "",
+    email: "",
+    mobile: "",
   });
 
   const [toggleview, setToggleView] = useState(false);
   const auth = getAuth();
   const navigate = useNavigate();
+  const { user } = useContext(Context);
+
+  const usersCollection = collection(db, "user_details", user.uid, "details");
+
   const addUserDetails = () => {
     setAddUsers(!addUsers);
   };
 
+  const fetchUserDetails = async () => {
+    try {
+      const querySnapshot = await getDocs(usersCollection);
+      const userDetails = [];
+      querySnapshot.forEach((doc) => {
+        userDetails.push({ id: doc.id, ...doc.data() });
+      });
+      setGetDetails(userDetails);
+    } catch (error) {
+      console.error("Error fetching user details:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserDetails();
+  }, [usersCollection]);
+
   function handleUpdate(id) {
-    console.log("update", id);
-    setUpdateDetails({ isActive: !updateDetails.isActive, userId: id });
+    const selectedUser = getDetails.find((user) => user.id === id);
+
+    setUpdateDetails({
+      isActive: !updateDetails.isActive, // Toggle isActive
+      userId: id,
+      username: selectedUser.username,
+      email: selectedUser.email,
+      mobile: selectedUser.mobile,
+    });
+
+    setAddUsers(!addUsers); // Toggle AddUser component
   }
+  const handleDelete = async (id) => {
+    try {
+      await deleteDoc(doc(usersCollection, id));
+      setGetDetails((prevDetails) =>
+        prevDetails.filter((user) => user.id !== id)
+      );
+    } catch (error) {
+      console.error("Error deleting user:", error.message);
+    }
+  };
 
-  const Allitems = JSON.parse(localStorage.getItem("userStore"));
-
-  function handleDelete(id) {
-    const updatedItems = Allitems.filter((item) => item.id !== id);
-    localStorage.setItem("userStore", JSON.stringify(updatedItems));
-    setGetDetails(updatedItems);
-  }
-
-  async function handleLogout() {
+  const handleLogout = async () => {
     try {
       await signOut(auth);
       navigate("/");
     } catch (error) {
-      console.log(error);
+      console.error("Error logging out:", error.message);
     }
-  }
-
-  // console.log(Allitems);
-  // useEffect(() => {
-  //   setGetDetails(JSON.parse(localStorage.getItem("userStore")));
-  // }, []); // Add an empty dependency array to run the effect only once
-
-  // console.log(getDetails);
-
-  // useLayoutEffect(() => {
-  //   const storedDetails = JSON.parse(localStorage.getItem("userStore"));
-  //   console.log("storedDetails:", storedDetails);
-  //   setGetDetails(storedDetails);
-  //   console.log("getDetails", getDetails);
-  // }, []);
-  // console.log("outside layout getDetails:", getDetails);
-
-  // useEffect(() => {
-  //   setGetDetails(JSON.parse(localStorage.getItem("userStore")));
-  //   console.log("getDetails: ", getDetails);
-  // }, []);
+  };
 
   return (
     <div className="main-container">
@@ -130,7 +151,7 @@ const DashboardPage = () => {
               <div key={eachUser.id} className="card-component">
                 <div className="label-container">
                   <span>S.no: </span>
-                  <p> {eachUser.id}</p>
+                  <p>{eachUser.id}</p>
                 </div>
                 <div className="label-container">
                   <span> Username: </span>
@@ -173,8 +194,23 @@ const DashboardPage = () => {
           <h1>No user details available</h1>
         </div>
       )}
-      {addUsers ? <AddUser /> : ""}
-      {updateDetails.isActive ? <AddUser userId={updateDetails.userId} /> : ""}
+      {addUsers || updateDetails.isActive ? (
+        <AddUser
+          userId={user.uid}
+          updateDetails={updateDetails}
+          onUpdate={() => {
+            fetchUserDetails(); // Reload user details on successful update
+            setAddUsers(false); // Close AddUser component
+            setUpdateDetails({ isActive: false, userId: null }); // Reset updateDetails
+          }}
+          onCancel={() => {
+            setAddUsers(false); // Close AddUser component
+            setUpdateDetails({ isActive: false, userId: null }); // Reset updateDetails
+          }}
+        />
+      ) : (
+        ""
+      )}
     </div>
   );
 };

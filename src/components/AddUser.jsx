@@ -1,73 +1,106 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  doc,
+  setDoc,
+  collection,
+  updateDoc,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import { db } from "../index";
 import "./css/AddUser.css";
-const AddUser = ({ userId }) => {
+
+const AddUser = ({ userId, updateDetails, onUpdate, onCancel }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
-  const [store, setStore] = useState(
-    JSON.parse(localStorage.getItem("userStore"))
-  );
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    // If userId is provided, find the corresponding user details
-    if (userId) {
-      const userToEdit = store.find((user) => user.id === userId);
-      if (userToEdit) {
-        setUsername(userToEdit.username);
-        setEmail(userToEdit.email);
-        setMobile(userToEdit.mobile);
-      }
-    }
-  }, [userId, store]);
-
-  const handleAddUser = (e) => {
-    e.preventDefault();
-    if (username === "" || email === "" || mobile === "") {
-      return alert("Please fill in all the details");
+    // Set form fields when updateDetails change
+    if (updateDetails.isActive) {
+      setUsername(updateDetails.username || "");
+      setEmail(updateDetails.email || "");
+      setMobile(updateDetails.mobile || "");
     } else {
-      let newUser = {
-        username: username,
-        email: email,
-        mobile: mobile,
-        id: userId || Date.now(),
-      };
-
-      setStore((prevStore) => {
-        if (Array.isArray(prevStore)) {
-          // If prevStore is an array, perform the necessary operations
-          if (userId) {
-            // If updating, find the user in the store and update details
-            return prevStore.map((user) =>
-              user.id === userId ? newUser : user
-            );
-          } else {
-            // If adding, append the new user to the store
-            return [...prevStore, newUser];
-          }
-        } else {
-          // If prevStore is not an array, initialize it as an array with the new user
-          return [newUser];
-        }
-      });
-
-      // Clear the input fields after adding/updating a user
+      // Reset the form fields when not updating
       setUsername("");
       setEmail("");
       setMobile("");
-      alert(`${newUser.username} ${userId ? "updated" : "added"} to the store`);
     }
-    window.location.reload();
-    console.log(store);
+  }, [updateDetails]);
+
+  const handleAddUser = async (e) => {
+    e.preventDefault();
+
+    setError(""); // Clear any previous error
+
+    const userDetailsCollection = collection(
+      db,
+      "user_details",
+      userId,
+      "details"
+    );
+
+    if (updateDetails.isActive) {
+      const userDetailsDocRef = doc(
+        userDetailsCollection,
+        updateDetails.userId
+      );
+
+      await updateDoc(userDetailsDocRef, {
+        username: username,
+        email: email,
+        mobile: mobile,
+      });
+
+      onUpdate(); // Callback to notify the parent about the update
+    } else {
+      // For new user addition
+      const emailUnique = await isEmailUnique();
+
+      if (!emailUnique) {
+        setError("Email already exists.");
+        return;
+      }
+
+      const userDetailsDocRef = doc(userDetailsCollection);
+
+      await setDoc(userDetailsDocRef, {
+        username: username,
+        email: email,
+        mobile: mobile,
+      });
+
+      onUpdate(); // Callback to notify the parent about the update
+    }
+
+    // Reset the form
+    setUsername("");
+    setEmail("");
+    setMobile("");
   };
 
-  // Save the data to local storage whenever the store changes
-  useEffect(() => {
-    localStorage.setItem("userStore", JSON.stringify(store));
-    console.log(store);
-  }, [store]);
+  const isEmailUnique = async () => {
+    const userDetailsCollection = collection(
+      db,
+      "user_details",
+      userId,
+      "details"
+    );
+
+    const querySnapshot = await getDocs(
+      query(userDetailsCollection, where("email", "==", email))
+    );
+
+    return querySnapshot.empty;
+  };
+
   return (
     <div className="container">
-      <h1>Add User</h1>
+      <h1>{updateDetails.isActive ? "Update User" : "Add User"}</h1>
+      {error && <p className="error-message">{error}</p>}
 
       <form className="form-container" onSubmit={handleAddUser}>
         <div className="input-container">
@@ -79,7 +112,7 @@ const AddUser = ({ userId }) => {
             value={username}
             required
           />
-        </div>{" "}
+        </div>
         <div className="input-container">
           <label htmlFor="email">Email</label>
           <input
@@ -102,8 +135,19 @@ const AddUser = ({ userId }) => {
             required
           />
         </div>
-        <div>
-          <button type="submit">{userId ? "Update User" : "Add User"}</button>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+          <button type="submit">
+            {updateDetails.isActive ? "Update User" : "Add User"}
+          </button>
         </div>
       </form>
     </div>

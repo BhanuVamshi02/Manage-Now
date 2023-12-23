@@ -22,7 +22,15 @@ const LoginPage = () => {
       const user = userCredential.user;
 
       alert(` Welcome ${user.displayName}! `);
-      console.log(user, "authdata");
+      console.log(
+        user,
+        "uid=",
+        user.uid,
+        "displayName=",
+        user.displayName,
+        "Email=",
+        user.email
+      );
       navigate("/dashboard");
     } catch (error) {
       alert(error.message);
