@@ -12,6 +12,7 @@ const SigninPage = () => {
   const [displayName, setDisplayname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
 
   const auth = getAuth();
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ const SigninPage = () => {
       console.log(user, "authdata");
       navigate("/login");
     } catch (error) {
-      alert(error.message);
+      setError(true);
     }
   }
 
@@ -71,6 +72,11 @@ const SigninPage = () => {
         <p>
           Already registered? <Link to="/login">Login</Link>
         </p>
+        {error ? (
+          <p style={{ color: "red" }}>Please fill correct Details</p>
+        ) : (
+          ""
+        )}
       </div>
       <div className="logo-container">
         <Link to="/">
