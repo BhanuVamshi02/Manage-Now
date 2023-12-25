@@ -111,7 +111,7 @@ const DashboardPage = () => {
         </p>
       </div>
       <div className="search-container">
-        <input type="text" />
+        <input type="text" placeholder="Search..." />
       </div>
 
       {getDetails && getDetails.length > 0 ? (
