@@ -12,7 +12,6 @@ const SigninPage = () => {
   const [displayName, setDisplayname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
 
   const auth = getAuth();
   const navigate = useNavigate();
@@ -35,7 +34,7 @@ const SigninPage = () => {
       console.log(user, "authdata");
       navigate("/login");
     } catch (error) {
-      setError(true);
+      alert(error);
     }
   }
 
@@ -60,11 +59,6 @@ const SigninPage = () => {
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
           />
-          {/* <input
-            type="password"
-            placeholder="Confirm Password"
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          /> */}
 
           <button>Sign up</button>
         </form>
@@ -72,11 +66,6 @@ const SigninPage = () => {
         <p>
           Already registered? <Link to="/login">Login</Link>
         </p>
-        {error ? (
-          <p style={{ color: "red" }}>Please fill correct Details</p>
-        ) : (
-          ""
-        )}
       </div>
       <div className="logo-container">
         <Link to="/">
