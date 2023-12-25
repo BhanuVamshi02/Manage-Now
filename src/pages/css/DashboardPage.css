@@ -3,16 +3,38 @@
   /* height: 100%; */
   width: 100%;
 }
-.main-container .view-button {
-  margin: 40px 0 0 40px;
+
+.main-container .view-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  margin: 40px auto;
+}
+.main-container .view-container .view-button {
+  /* margin: 40px 0 0 40px; */
   font-weight: bold;
   padding: 10px;
   cursor: pointer;
   border: none;
   border-radius: 5px;
 }
-.main-container .view-button:hover {
+
+.main-container .view-container .view-button:hover {
   background-color: rgb(182, 177, 177);
+}
+
+.view-container p {
+  font-weight: bold;
+  color: white;
+  font-size: larger;
+  @media (max-width: 365px) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+.view-container p span {
+  font-size: small;
 }
 
 .nav-container {

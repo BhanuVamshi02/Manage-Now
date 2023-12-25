@@ -99,20 +99,26 @@ const DashboardPage = () => {
           <button onClick={handleLogout}>LOGOUT </button>
         </div>
       </div>
-
-      <button
-        className="view-button"
-        onClick={() => setToggleView(!toggleview)}
-      >
-        {toggleview ? "Card View" : "Table View"}
-      </button>
+      <div className="view-container">
+        <button
+          className="view-button"
+          onClick={() => setToggleView(!toggleview)}
+        >
+          {toggleview ? "Card View" : "Table View"}
+        </button>
+        <p>
+          <span>Welcome,</span> {user.displayName}
+        </p>
+      </div>
+      <div className="search-container">
+        <input type="text" />
+      </div>
 
       {getDetails && getDetails.length > 0 ? (
         toggleview ? (
           <table>
             <thead>
               <tr>
-                <th>S. no</th>
                 <th>Username</th>
                 <th>Email</th>
                 <th>Mobile</th>
@@ -123,7 +129,6 @@ const DashboardPage = () => {
             <tbody>
               {getDetails.map((eachUser) => (
                 <tr className="row" key={eachUser.id}>
-                  <td>{eachUser.id}</td>
                   <td>{eachUser.username}</td>
                   <td>{eachUser.email}</td>
                   <td>{eachUser.mobile}</td>
@@ -149,10 +154,6 @@ const DashboardPage = () => {
           <div className="card-container">
             {getDetails.map((eachUser) => (
               <div key={eachUser.id} className="card-component">
-                <div className="label-container">
-                  <span>S.no: </span>
-                  <p>{eachUser.id}</p>
-                </div>
                 <div className="label-container">
                   <span> Username: </span>
                   <p>{eachUser.username}</p>
