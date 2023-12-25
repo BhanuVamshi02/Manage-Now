@@ -12,7 +12,7 @@ const SigninPage = () => {
   const [displayName, setDisplayname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+
   const auth = getAuth();
   const navigate = useNavigate();
 
@@ -73,7 +73,9 @@ const SigninPage = () => {
         </p>
       </div>
       <div className="logo-container">
-        <img src="/mlogo.jpg" alt="" style={{ width: "100px" }} />
+        <Link to="/">
+          <img src="/mlogo.jpg" alt="" style={{ width: "100px" }} />
+        </Link>{" "}
         <h1>Manage Now</h1>
         <p>A free online platform to store user details</p>
       </div>

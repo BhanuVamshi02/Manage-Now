@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
   const auth = getAuth();
   const navigate = useNavigate();
 
@@ -33,7 +34,7 @@ const LoginPage = () => {
       );
       navigate("/dashboard");
     } catch (error) {
-      alert(error.message);
+      setError(true);
     }
   }
 
@@ -57,9 +58,16 @@ const LoginPage = () => {
         <p>
           Not registered? <Link to="/signin">Sign up</Link>
         </p>
+        {error ? (
+          <p style={{ color: "red" }}>Please fill correct Details</p>
+        ) : (
+          ""
+        )}
       </div>
       <div className="logo-container">
-        <img src="/mlogo.jpg" alt="" style={{ width: "100px" }} />
+        <Link to="/">
+          <img src="/mlogo.jpg" alt="" style={{ width: "100px" }} />
+        </Link>
         <h1>Manage Now</h1> <p>A free online platform to store user details</p>
       </div>
     </div>

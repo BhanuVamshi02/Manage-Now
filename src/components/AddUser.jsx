@@ -100,7 +100,11 @@ const AddUser = ({ userId, updateDetails, onUpdate, onCancel }) => {
   return (
     <div className="container">
       <h1>{updateDetails.isActive ? "Update User" : "Add User"}</h1>
-      {error && <p className="error-message">{error}</p>}
+      {error && (
+        <p className="error-message" style={{ color: "red" }}>
+          {error}
+        </p>
+      )}
 
       <form className="form-container" onSubmit={handleAddUser}>
         <div className="input-container">
