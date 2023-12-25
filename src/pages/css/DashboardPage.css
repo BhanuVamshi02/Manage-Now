@@ -50,6 +50,12 @@
   font-size: large;
   padding: 10px;
   border-radius: 8px;
+  @media (max-width: 975px) {
+    width: 80%;
+  }
+  @media (max-width: 605px) {
+    width: 85%;
+  }
 }
 
 .nav-container {

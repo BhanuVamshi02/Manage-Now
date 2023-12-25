@@ -25,6 +25,8 @@ const DashboardPage = () => {
   });
 
   const [toggleview, setToggleView] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // Step 1
+
   const auth = getAuth();
   const navigate = useNavigate();
   const { user } = useContext(Context);
@@ -42,15 +44,18 @@ const DashboardPage = () => {
       querySnapshot.forEach((doc) => {
         userDetails.push({ id: doc.id, ...doc.data() });
       });
-      setGetDetails(userDetails);
+      const filteredDetails = userDetails.filter(
+        (user) =>
+          // Check if the search query matches username, email, or mobile
+          user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.mobile.includes(searchQuery)
+      );
+      setGetDetails(filteredDetails);
     } catch (error) {
       console.error("Error fetching user details:", error.message);
     }
   };
-
-  useEffect(() => {
-    fetchUserDetails();
-  }, [usersCollection]);
 
   function handleUpdate(id) {
     const selectedUser = getDetails.find((user) => user.id === id);
@@ -85,6 +90,9 @@ const DashboardPage = () => {
     }
   };
 
+  useEffect(() => {
+    fetchUserDetails();
+  }, [usersCollection, searchQuery]);
   return (
     <div className="main-container">
       <div className="nav-container">
@@ -107,11 +115,17 @@ const DashboardPage = () => {
           {toggleview ? "Card View" : "Table View"}
         </button>
         <p>
-          <span>Welcome,</span> {user.displayName}
+          <span>Welcome,</span> {user.displayName}!
         </p>
       </div>
+
       <div className="search-container">
-        <input type="text" placeholder="Search..." />
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)} // Step 1: Update searchQuery
+        />
       </div>
 
       {getDetails && getDetails.length > 0 ? (
@@ -192,7 +206,7 @@ const DashboardPage = () => {
             flexWrap: "wrap",
           }}
         >
-          <h1>No user details available</h1>
+          <h3>No user details available</h3>
         </div>
       )}
       {addUsers || updateDetails.isActive ? (
